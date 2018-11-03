@@ -1,0 +1,19 @@
+{
+  "pages": [
+    "pages/classic/classic"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#eee",
+    "navigationBarTitleText":"Long Island",
+    "navigationBarTextStyle": "black",
+    "navigationStyle":"default",
+    "backgroundColor":"ffffff",
+    "enablePullDownRefresh":false
+  },
+ 
+  "networkTimeout": {
+    "request": 10000,
+    "downloadFile": 10000
+  }, 
+    "debug": true
+}

@@ -1,0 +1,14 @@
+ <!--pages/classic/classic.wxml-->
+
+<view class='container'>
+  <view class='header'>
+    <v-epsoide class='epsoide' index= "{{classicData.index}}" />
+    <v-like  class='like' bind:like="onLike" like='{{classicData.like_status}}' count= '{{classicData.fav_nums}}' />
+  </view>
+
+  
+
+  <v-movie img="{{classicData.image}}" content = "{{classicData.content}}" />
+
+  <v-nav title="{{classicData.title}}" bind:left="onNext" bind:right="onPrevious"  first="{{first}}"  latest="{{ latest}}" class='nav' />
+</view> 
