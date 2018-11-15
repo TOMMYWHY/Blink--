@@ -1,0 +1,18 @@
+var format = function(text){
+    // return '111111111';
+    if(!text){
+      return;
+    }
+    // console.log(text);
+    var reg = getRegExp('\\\\n','g');
+    return text.replace(reg,'\n&nbsp;'); 
+}
+
+var limit = function(array, length){
+  return array.slice(0,length);
+}
+
+module.exports = {
+  format: format,
+  limit:limit
+}

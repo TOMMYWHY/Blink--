@@ -14,12 +14,12 @@ Page({
    */
   data: {
     classicData: null,
-    // like_status:false, //当前用户【id=1】是否喜欢
-    latest: true,
+    latest: true,//判断该 classic 是否为最新，并控制 nav 中的箭头
     first: false ,
-    userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    // hasUserInfo: false,
+    // canIUse: wx.canIUse('button.open-type.getUserInfo')
+    likeCount:0,
+    likeStatus:false
   },
 
   /**
@@ -27,80 +27,56 @@ Page({
    */
   onLoad: function (options) {
      classicModel.getLatest((res)=>{
-       console.log(res)
-        // console.log(res.all_users[0].pivot.isLike);
-      //  let like_status = res.all_users[0]
-        //setData 更新data 内容。 
+      //  this._getLikeStatus(res.id, res.type);
+      //  console.log(res)
         this.setData({
           classicData: res, //绑定数据
-          // like_status: res.all_users[0].pivot.isLike, 
+          likeCount: res.fav_nums,
+          likeStatus:res.like_status
         });
-    });
-
-    //   wx.request()  异步请求
-    /*
-    wx.request({
-          url: 'http://weichat.test/api/v1/classic/show/latest/',
-          header:{
-            appkey:""
-          },
-          success:(res)=>{
-            console.log(res);
-            console.log(this.data.test);
-          }
-        })
-    */    
+    });  
   },
 
 //监听点击事件
   onLike: function (e) {
-    console.log(e);
+    // console.log(e);
     let behavior = e.detail.behavior; //当前 like 状态
+    console.log(behavior);
     likeModel.like(behavior, this.data.classicData.id, this.data.classicData.type);
    },
 
 
-  
-
 //下一个
   onPrevious:function(e){
     this._updateClassic('previous');
-     /*
-     *tommy 解决方案
-     //index 取值
-     if(!index){
-       index = 1;
-       console.log(res.error);
-     }
-     classicModel.getPrevious(index, (res)=>{
-       console.log(res);
-       //有错误时显示错误信息。
-       if (res.error){
-         console.log(res.error);
-       }
-      //update data
-      this.setData({
-        classicData:res
-      })
-     });
-     */
-
    },
   //上一个
   onNext: function (e) {
     this._updateClassic('next');
-
   },
+  // =================
   _updateClassic:function(nexOrPrevious){
     let index = this.data.classicData.index;
     classicModel.getClassic(index, nexOrPrevious , (res)=>{
       console.log(res);
+      this._getLikeStatus(res.id, res.type);
       this.setData({
         classicData: res,
-        // like_status: res.all_users ? res.all_users[0].pivot.isLike:0 , //后台数据中没有合并like_status时
         latest: classicModel.isLatest(res.index),
         first: classicModel.isFirst(res.index)
       })
+    });
+  },
+
+  _getLikeStatus:function(artID, category){
+    // console.log(1);
+    likeModel.getClassicLikeStatus(artID, category,(res)=>{
+      console.log(res);
+      
+      this.setData({
+        likeCount : res.fav_nums,
+        likeStatus : res.like_status
+      });
     });
   },
 

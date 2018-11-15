@@ -1,0 +1,112 @@
+<!--pages/book-detail/book-detail.wxml-->
+
+<wxs src='../../util/filter.wxs' module="util" />
+
+<view class='container'>
+  <view class='head'>
+    <image src='{{book.image}}'></image>
+    <text class='title'>{{book.title}}</text>
+    <text class='author'>{{book.author}}</text>
+  </view>
+
+  <view class='sub-container'>
+    <text class='headline'>Comments</text>
+    <text class='shadow' wx:if="{{comments==false}}">Haven't comment yet~!</text>
+
+    <view class='comment-container'>
+      <block wx:for="{{util.limit(comments,4)}}" wx:key=""> 
+      <v-tag tag-class='{{tool.highlight(index) }}' text="{{item.content}}" >
+        <text class='num' slot="after">{{'+' + item.nums}}</text>
+      </v-tag>
+     
+    </block>
+    </view>
+  </view>
+
+  <view class='sub-container'>
+    <text class='headline'>Content Brief</text>
+    <text class='content' decode="{{true}}">{{util.format(book.summary)}}</text>
+  </view>
+
+  <view class='sub-container'>
+    <text class='headline'>Information</text>
+    <view class='detail-container'>
+        <view class='vertical description'>
+            <text>publisher</text>
+            <text>pubdate</text>
+            <text>pages</text>
+            <text>price</text>
+            <text>binding</text>
+            
+        </view>
+        <view class='vertical'>
+          <text>{{book.publisher}}</text>
+          <text>{{book.pubdate}}</text>
+          <text>{{book.pages}}</text>
+          <text>{{book.price}}</text>
+          <text>{{book.binding}}</text>
+        
+        </view>
+    </view> 
+
+
+  </view>
+
+</view>
+
+
+<view class='post-container'  wx:if="{{!posting}}">
+    <view class='post-fake' bind:tap="onFakePost">
+      <text>say some thing...</text>
+      
+    </view>
+
+    <view class='like-container'>
+      <v-like bind:like= 'onLike' class='like' like="{{likeStauts}}" count = "{{likeCount}}"></v-like>
+    </view>
+    
+</view>
+
+<!-- 弹出层 -->
+<view class='posting-container' wx:if="{{posting}}">
+    <view class='post-header'>
+        <text wx:if="{{comments==true}}">click comment +1</text>
+        <text class='shadow' wx:else>Haven't comment yet~!</text>
+
+        <text class='cancel' bind:tap="conCancel">cancel</text>
+    </view>
+
+    <view>
+        <view class='comment-container'>
+            <block wx:for="{{util.limit(comments,3)}}" wx:key=""> 
+              <v-tag bind:tapping="onPost" tag-class='{{tool.highlight(index) }}' text="{{item.content}}" >
+                <text class='num' slot="after">{{'+' + item.nums}}</text>
+              </v-tag>
+            
+            </block>
+        </view>
+    </view>
+
+    <input bindconfirm='onPost' class='post' placeholder='max 12 words'></input>
+
+</view>
+
+
+<v-mask wx:if="{{posting}}" />
+
+
+<wxs module="tool">
+  var highlight = function(index){
+    if(index == 0){
+      return 'ex-tag1';
+    }
+    if(index == 1 ){
+      return 'ex-tag2';
+    }
+    else{
+      return "";
+    }
+  }
+
+  module.exports ={highlight:highlight}
+</wxs>
